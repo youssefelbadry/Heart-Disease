@@ -2,7 +2,7 @@ export const template = (
   code: number,
   username: string,
   subject: string,
-  expiresIn: string = "1 minute"
+  expiresIn: string = "1 minute",
 ) => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +22,7 @@ export const template = (
     .wrapper {
       width: 100%;
       padding: 40px 0;
-    }
+    } 
 
     .container {
       max-width: 620px;
