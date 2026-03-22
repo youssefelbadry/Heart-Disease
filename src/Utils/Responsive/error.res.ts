@@ -8,7 +8,7 @@ export class ApplicationException extends Error {
   constructor(
     message: string,
     public statuscode: number = 400,
-    options?: ErrorOptions
+    options?: ErrorOptions,
   ) {
     super(message, options);
     this.name = this.constructor.name;
@@ -43,9 +43,9 @@ export class ForbiddenException extends ApplicationException {
 
 export const globalErrorHandling = (
   err: IError,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction,
 ) => {
   return res.status(err.statuscode || 500).json({
     message: err.message,

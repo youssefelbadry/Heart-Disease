@@ -7,7 +7,7 @@ type keyReqType = keyof Request;
 type SchemaType = Partial<Record<keyReqType, ZodTypeAny>>;
 
 export const validation = (schema: SchemaType) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, _res: Response, next: NextFunction) => {
     const validtaionErrors: Array<{
       key: keyReqType;
       issues: Array<{ message: string; path: (string | number | symbol)[] }>;
@@ -46,8 +46,7 @@ export const generaFeild = {
     .min(3, { message: "Name must be at least 3 characters" })
     .max(30, { message: "Name must be at most 30 characters" }),
 
-  email: z
-    .email({ message: "Invalid email address" }),
+  email: z.email({ message: "Invalid email address" }),
 
   password: z
     .string()

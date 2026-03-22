@@ -1,4 +1,3 @@
-import { ICreateMedicalRecordDTO } from './../MedicalRecord/medicalRecord.dto';
 import { Request, Response } from "express";
 import patientRepo from "../../DB/Repository/patient.repository";
 import { generateHash, compareHash } from "../../Utils/Security/hash";
@@ -10,7 +9,6 @@ import {
   NotFoundException,
 } from "../../Utils/Responsive/error.res";
 import { IConfirmEmailDTO } from "./auth.dto";
-import medicalRecordRepository from "../../DB/Repository/medicalRecord.repository";
 
 class AuthService {
   signup = async (req: Request, res: Response) => {
@@ -37,35 +35,34 @@ class AuthService {
     });
   };
   requestConfirmEmail = async (req: Request, res: Response) => {
-  const { email }: IConfirmEmailDTO = req.body;
+    const { email }: IConfirmEmailDTO = req.body;
 
-  const patient = await patientRepo.findByEmail(email);
+    const patient = await patientRepo.findByEmail(email);
 
-  if (!patient || patient.is_email_verified)
-    throw new NotFoundException("User not found or already confirmed");
+    if (!patient || patient.is_email_verified)
+      throw new NotFoundException("User not found or already confirmed");
 
-  if (
-    patient.email_otp_expires_at &&
-    new Date(patient.email_otp_expires_at) > new Date()
-  ) {
-    throw new BadRequestException("OTP already sent, please wait");
-  }
+    if (
+      patient.email_otp_expires_at &&
+      new Date(patient.email_otp_expires_at) > new Date()
+    ) {
+      throw new BadRequestException("OTP already sent, please wait");
+    }
 
-  const otp = Otp.generateOtp();
-  const otpExpires = Otp.otpExpiresAt();
+    const otp = Otp.generateOtp();
+    const otpExpires = Otp.otpExpiresAt();
 
-  await patientRepo.updateById(patient.id, {
-    email_otp: otp,
-    email_otp_expires_at: otpExpires,
-  });
+    await patientRepo.updateById(patient.id, {
+      email_otp: otp,
+      email_otp_expires_at: otpExpires,
+    });
 
-  emailService(email, patient.name, otp);
+    emailService(email, patient.name, otp);
 
-  res.status(200).json({
-    message: "OTP is sent",
-  });
-};
-
+    res.status(200).json({
+      message: "OTP is sent",
+    });
+  };
 
   confirmEmail = async (req: Request, res: Response) => {
     const { email, otp } = req.body;
@@ -76,8 +73,7 @@ class AuthService {
     if (patient.email_otp_expires_at < new Date())
       throw new BadRequestException("OTP expired");
 
-    if (otp !== patient.email_otp)
-      throw new BadRequestException("Invalid OTP");
+    if (otp !== patient.email_otp) throw new BadRequestException("Invalid OTP");
 
     await patientRepo.updateById(patient.id, {
       is_email_verified: true,
@@ -101,18 +97,15 @@ class AuthService {
     const token = signToken({
       id: patient.id,
       email: patient.email,
-       
     });
 
-        res.status(200).json({ message: "Login successful", access_token: token });
-
+    res.status(200).json({ message: "Login successful", access_token: token });
   };
-  logout = async (req: Request, res: Response) => {
-  return res.status(200).json({
-    message: "Logged out successfully",
-  });
-};
-
+  logout = async (_req: Request, res: Response) => {
+    return res.status(200).json({
+      message: "Logged out successfully",
+    });
+  };
 }
 
 export default new AuthService();
