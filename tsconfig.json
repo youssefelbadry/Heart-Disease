@@ -18,7 +18,6 @@
     "exactOptionalPropertyTypes": true,
     "removeComments": true,
 
-    // Style Options (عدلنا هنا 👇)
     "noImplicitReturns": true,
     "noImplicitOverride": true,
     "noUnusedLocals": false,
