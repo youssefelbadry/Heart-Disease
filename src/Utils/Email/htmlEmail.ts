@@ -3,7 +3,7 @@ export const template = (username: string, subject: string) => `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Welcome to CardioAI</title>
+  <title>Email Verification</title>
 
   <style>
     body {
@@ -62,6 +62,19 @@ export const template = (username: string, subject: string) => `<!DOCTYPE html>
       margin: 12px 0;
     }
 
+    .otp-box {
+      margin: 30px auto;
+      display: inline-block;
+      padding: 18px 40px;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: #0a3d62;
+      background-color: #eef5fb;
+      border-radius: 8px;
+      border: 1px dashed #0a3d62;
+    }
+
     .note {
       font-size: 13px;
       color: #777;
@@ -96,15 +109,15 @@ export const template = (username: string, subject: string) => `<!DOCTYPE html>
         <h2>Hello ${username}</h2>
 
         <p>
-          Welcome to CardioAI. Your account has been created successfully on our website.
+          You have requested to <strong>${subject}</strong> for your account.
         </p>
 
         <p>
-          We are glad to have you with us and hope the platform helps you manage your health journey in a simple and reliable way.
+          Please use the verification code below to proceed:
         </p>
 
         <p class="note">
-          If this account was not created by you, please contact support as soon as possible.
+          If you did not request this action, you can safely ignore this email.
         </p>
       </div>
 
