@@ -1,15 +1,18 @@
 import { Request, Response } from "express";
 import MedicalRecordRepository from "../../DB/Repository/medicalRecord.repository";
-import { BadRequestException, NotFoundException, UnauthorizedException } from "../../Utils/Responsive/error.res";
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from "../../Utils/Responsive/error.res";
 
 class MedicalRecordService {
   constructor() {}
 
   createMedicalRecord = async (
     req: Request,
-    res: Response
+    res: Response,
   ): Promise<Response> => {
-
     if (!req.user?.id) {
       throw new UnauthorizedException("Unauthorized");
     }
@@ -34,19 +37,19 @@ class MedicalRecordService {
     });
   };
 
-  getMedicalRecord = async (
-    req: Request,
-    res: Response
-  ): Promise<Response> => {
+  getMedicalRecord = async (req: Request, res: Response): Promise<Response> => {
+    if (!req.user?.id) {
+      throw new UnauthorizedException("Unauthorized");
+    }
 
     const record_id = Number(req.params.id);
-    if (isNaN(record_id)) {
+    if (!Number.isInteger(record_id) || record_id <= 0) {
       throw new BadRequestException("Invalid record id");
     }
 
     const record = await MedicalRecordRepository.findById(
       record_id,
-      req.user.id
+      req.user.id,
     );
 
     if (!record) {
@@ -59,6 +62,5 @@ class MedicalRecordService {
     });
   };
 }
-
 
 export default new MedicalRecordService();

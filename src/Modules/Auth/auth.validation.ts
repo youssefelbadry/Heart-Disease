@@ -37,14 +37,30 @@ export const signUpSchema = {
     }),
 };
 
-export const confirmEmailSchema = {
+export const forgetPasswordSchema = {
   body: z.strictObject({
     email: generaFeild.email,
-    otp: generaFeild.otp,
   }),
 };
 
-export const requestOtpSchema = {
+export const resetPasswordSchema = {
+  body: z
+    .strictObject({
+      oldPassword: generaFeild.password,
+      newPassword: generaFeild.password,
+    })
+    .superRefine((data, ctx) => {
+      if (data.oldPassword === data.newPassword) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["newPassword"],
+          message: "New password must be different from old password",
+        });
+      }
+    }),
+};
+
+export const logOutSchema = {
   body: z.strictObject({
     email: generaFeild.email,
   }),

@@ -53,9 +53,4 @@ export const generaFeild = {
     .min(8, { message: "Password must be at least 8 characters" }),
 
   confirmPassword: z.string(),
-
-  otp: z
-    .string()
-    .length(6, { message: "OTP must be exactly 6 digits" })
-    .regex(/^\d+$/, { message: "OTP must contain only numbers" }),
 };

@@ -4,16 +4,9 @@
 -- =========================
 CREATE TABLE patients (
     id INT AUTO_INCREMENT PRIMARY KEY,
-
     name VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-
-    -- Email verification (OTP)
-    email_otp VARCHAR(6) NULL,
-    email_otp_expires_at TIMESTAMP NULL,
-    is_email_verified BOOLEAN DEFAULT FALSE,
-
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

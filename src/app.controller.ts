@@ -12,7 +12,7 @@ import modelResultRouter from "./Modules/ModelResult/modelResult.controller";
 
 const bootstrab = () => {
   const app = express();
-config({ path: path.resolve("./config/.env.dev") });
+  config({ path: path.resolve("./config/.env.dev") });
 
   app.use(cors());
   app.use(helmet());
@@ -22,7 +22,7 @@ config({ path: path.resolve("./config/.env.dev") });
     rateLimit({
       windowMs: 15 * 60 * 1000,
       limit: 100,
-    })
+    }),
   );
 
   app.use("/api/v1/auth", authRouter);
@@ -31,7 +31,7 @@ config({ path: path.resolve("./config/.env.dev") });
   app.use("/api/v1/result", modelResultRouter);
 
   app.use("{/dummy}", (_req: Request, res: Response) => {
-    res.status(404).json({ message: "not found" });
+    res.status(404).json({ message: "Not found endpoint" });
   });
 
   app.use(globalErrorHandling);

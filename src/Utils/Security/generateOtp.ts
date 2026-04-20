@@ -1,19 +1,17 @@
 import { emailEvent } from "../Events/email.event";
 
-export class Otp {
-  static generateOtp = (): string => {
-    return String(Math.floor(Math.random() * (900000 - 100000) + 100000));
+export class emailService {
+  static sendWelcomeEmail = (email: string, username: string) => {
+    emailEvent.emit("welcome", {
+      to: email,
+      username,
+    });
   };
 
-  static otpExpiresAt = (): Date => {
-    return new Date(Date.now() + Number(process.env.OTP_EXPIRES_AT));
+  static sendResetPasswordEmail = (email: string, username: string) => {
+    emailEvent.emit("forgetpassword", {
+      to: email,
+      username,
+    });
   };
 }
-
-export const emailService = (email: string, username: string, otp: string) => {
-  emailEvent.emit("ConfirmEmail", {
-    to: email,
-    username,
-    otp,
-  });
-};

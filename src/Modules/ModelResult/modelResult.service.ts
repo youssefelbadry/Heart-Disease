@@ -50,6 +50,10 @@ class ModelResultService {
       model_metadata,
     });
 
+    if (!resultId) {
+      throw new Error("Failed to create model result");
+    }
+
     return res.status(201).json({
       message: "Model result created",
       data: {
@@ -59,6 +63,7 @@ class ModelResultService {
         echo_video_id,
         cvd_risk_score,
         heart_failure_chance,
+        model_metadata,
       },
     });
   };

@@ -2,17 +2,22 @@ import * as z from "zod";
 
 export const createMedicalRecordSchema = {
   body: z.strictObject({
-    
-    patient_id: z.number().int().positive("Patient ID must be a positive integer").optional(),
+    patient_id: z
+      .number()
+      .int()
+      .positive("Patient ID must be a positive integer")
+      .optional(),
     age: z
       .number()
       .int()
       .min(0, "Age must be positive")
       .max(120, "Invalid age"),
 
-    gender: z.enum(["MALE", "FEMALE"], {
-      message: "Gender must be MALE or FEMALE",
-    }).default("MALE"),
+    gender: z
+      .enum(["MALE", "FEMALE"], {
+        message: "Gender must be MALE or FEMALE",
+      })
+      .default("MALE"),
 
     systolic_bp: z.number().optional(),
     diastolic_bp: z.number().optional(),
@@ -38,7 +43,7 @@ export const createMedicalRecordSchema = {
     fasting_blood_sugar: z.number().optional(),
   }),
 
-  params: z.strictObject({
-    id: z.number().int().positive("Patient ID must be a positive integer"),
-  }),
+  // params: z.strictObject({
+  //   id: z.number().int().positive("Patient ID must be a positive integer"),
+  // }),
 };
