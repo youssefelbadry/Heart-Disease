@@ -1,3 +1,5 @@
+import { config } from "dotenv";
+import path from "node:path";
 import express, { Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -6,13 +8,12 @@ import authRouter from "./Modules/Auth/auth.controller";
 import medicalRecordRouter from "./Modules/MedicalRecord/medicalRecord.controller";
 import echoVideoRouter from "./Modules/EchoVideos/echoVideos.controller";
 import { globalErrorHandling } from "./Utils/Responsive/error.res";
-import { config } from "dotenv";
-import path from "node:path";
 import modelResultRouter from "./Modules/ModelResult/modelResult.controller";
+
+config({ path: path.resolve("./config/.env.dev") });
 
 const bootstrab = () => {
   const app = express();
-  config({ path: path.resolve("./config/.env.dev") });
 
   app.use(cors());
   app.use(helmet());
@@ -30,7 +31,7 @@ const bootstrab = () => {
   app.use("/api/v1/echo", echoVideoRouter);
   app.use("/api/v1/result", modelResultRouter);
 
-  app.use("{/dummy}", (_req: Request, res: Response) => {
+  app.use((_req: Request, res: Response) => {
     res.status(404).json({ message: "Not found endpoint" });
   });
 

@@ -33,6 +33,7 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
+  "exclude": ["api", "dist", "node_modules"],
   "noUnusedLocals": false,
   "noUnusedParameters": false
 }
