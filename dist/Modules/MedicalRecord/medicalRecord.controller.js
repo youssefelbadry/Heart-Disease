@@ -10,5 +10,5 @@ const authentication_middelware_1 = require("../../Middlewares/authentication.mi
 const medicalRecord_validation_1 = require("./medicalRecord.validation");
 const router = (0, express_1.Router)();
 router.post("/createMedicalRecord", authentication_middelware_1.authenticate, (0, validation_middlware_1.validation)(medicalRecord_validation_1.createMedicalRecordSchema), medicalRecord_service_1.default.createMedicalRecord);
-router.get("/getMedicalRecord/:id", authentication_middelware_1.authenticate, medicalRecord_service_1.default.getMedicalRecord);
+router.get("/getMedicalRecord/:id", medicalRecord_service_1.default.getMedicalRecord);
 exports.default = router;
