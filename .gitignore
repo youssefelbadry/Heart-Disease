@@ -11,11 +11,11 @@ dist/
 # ======================
 # Environment files
 # ======================
-# config/
-# .env
-# .env.*
-# config/.env.dev
-# config/.env.prod
+config/
+.env
+.env.*
+config/.env.dev
+config/.env.prod
 # ======================
 # Uploads (user files)
 # ======================
