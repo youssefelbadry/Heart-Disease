@@ -15,7 +15,7 @@ router.post(
 
 router.get(
   "/getMedicalRecord/:id",
-  // authenticate,
+  authenticate,
   medicalRecordService.getMedicalRecord,
 );
 
