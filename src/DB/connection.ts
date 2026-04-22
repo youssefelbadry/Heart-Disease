@@ -27,10 +27,10 @@ let pool: mysql.Pool;
 
 if (!(global as any)._mysqlPool) {
   (global as any)._mysqlPool = mysql.createPool({
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASS || "root",
-    database: process.env.DB_NAME || "heart_disease_db",
+    host: process.env.DB_HOST || "db48896.databaseasp.net",
+    user: process.env.DB_USER || "db48896",
+    password: process.env.DB_PASS || "123456shahd",
+    database: process.env.DB_NAME || "Heartdisease_DB",
     port: Number(process.env.DB_PORT) || 3306,
     waitForConnections: true,
     connectionLimit: 10,
