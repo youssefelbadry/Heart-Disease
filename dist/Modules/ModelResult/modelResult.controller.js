@@ -10,5 +10,5 @@ const modelResult_validation_1 = require("./modelResult.validation");
 const authentication_middelware_1 = require("../../Middlewares/authentication.middelware");
 const router = (0, express_1.Router)();
 router.post("/createModelResult", authentication_middelware_1.authenticate, (0, validation_middlware_1.validation)(modelResult_validation_1.createModelResultSchema), modelResult_service_1.default.createModelResult);
-router.get("/getByMedicalRecord/:id", authentication_middelware_1.authenticate, modelResult_service_1.default.getByMedicalRecord);
+router.get("/getByMedicalRecord/:id", modelResult_service_1.default.getByMedicalRecord);
 exports.default = router;
