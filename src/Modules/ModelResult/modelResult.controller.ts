@@ -17,7 +17,7 @@ router.post(
 // User / Doctor
 router.get(
   "/getByMedicalRecord/:id",
-  // authenticate,
+  authenticate,
   modelResultService.getByMedicalRecord,
 );
 
