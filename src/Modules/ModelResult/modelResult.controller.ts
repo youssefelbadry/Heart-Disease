@@ -11,14 +11,14 @@ router.post(
   "/createModelResult",
   authenticate,
   validation(createModelResultSchema),
-  modelResultService.createModelResult
+  modelResultService.createModelResult,
 );
 
 // User / Doctor
 router.get(
   "/getByMedicalRecord/:id",
-  authenticate,
-  modelResultService.getByMedicalRecord
+  // authenticate,
+  modelResultService.getByMedicalRecord,
 );
 
 export default router;
