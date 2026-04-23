@@ -9,15 +9,15 @@ if (!(global as any)._mysqlPool) {
     password: process.env.DB_PASS || process.env.DB_PASSWORD || "123456shahd",
     database: process.env.DB_NAME || "db48896",
     port: Number(process.env.DB_PORT) || 3306,
-
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
     connectTimeout: 10000,
 
-    ssl: {
-      rejectUnauthorized: false,
-    },
+    ssl:
+      process.env.NODE_ENV === "production"
+        ? { rejectUnauthorized: false }
+        : (undefined as any),
   });
 }
 
