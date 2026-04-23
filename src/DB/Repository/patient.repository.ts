@@ -1,6 +1,14 @@
 import pool from "../connection";
 
 class PatientRepository {
+  async findById(id: number) {
+    const [rows]: any = await pool.query(
+      "SELECT * FROM patients WHERE id = ? LIMIT 1",
+      [id]
+    );
+    return rows[0] || null;
+  }
+
   async findByEmail(email: string) {
     const [rows]: any = await pool.query(
       "SELECT * FROM patients WHERE email = ? LIMIT 1",

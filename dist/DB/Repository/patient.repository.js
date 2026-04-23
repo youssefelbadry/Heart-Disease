@@ -5,6 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const connection_1 = __importDefault(require("../connection"));
 class PatientRepository {
+    async findById(id) {
+        const [rows] = await connection_1.default.query("SELECT * FROM patients WHERE id = ? LIMIT 1", [id]);
+        return rows[0] || null;
+    }
     async findByEmail(email) {
         const [rows] = await connection_1.default.query("SELECT * FROM patients WHERE email = ? LIMIT 1", [email]);
         return rows[0] || null;

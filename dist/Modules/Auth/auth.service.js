@@ -36,6 +36,9 @@ class AuthService {
             id: patient.id,
             email: patient.email,
         });
+        await patient_repository_1.default.updateById(patient.id, {
+            logged_out_at: null,
+        });
         res.status(200).json({ message: "Login successful", access_token: token });
     };
     forgetPassword = async (req, res) => {
@@ -61,7 +64,13 @@ class AuthService {
         });
         res.json({ message: "password reset successfully" });
     };
-    logout = async (_req, res) => {
+    logout = async (req, res) => {
+        if (!req.user?.id) {
+            throw new error_res_1.BadRequestException("Invalid token payload");
+        }
+        await patient_repository_1.default.updateById(req.user.id, {
+            logged_out_at: new Date(),
+        });
         return res.status(200).json({
             message: "Logged out successfully",
         });
