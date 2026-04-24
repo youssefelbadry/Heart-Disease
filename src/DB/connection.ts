@@ -4,20 +4,15 @@ let pool: mysql.Pool;
 
 if (!(global as any)._mysqlPool) {
   (global as any)._mysqlPool = mysql.createPool({
-    host: process.env.DB_HOST || "db48896.public.databaseasp.net",
-    user: process.env.DB_USER || "db48896",
-    password: process.env.DB_PASS || process.env.DB_PASSWORD || "123456shahd",
-    database: process.env.DB_NAME || "db48896",
-    port: Number(process.env.DB_PORT) || 3306,
+    host: process.env.DB_HOST!,
+    user: process.env.DB_USER!,
+    password: process.env.DB_PASS || process.env.DB_PASSWORD!,
+    database: process.env.DB_NAME!,
+    port: Number(process.env.DB_PORT),
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
     connectTimeout: 10000,
-
-    ssl:
-      process.env.NODE_ENV === "production"
-        ? { rejectUnauthorized: false }
-        : (undefined as any),
   });
 }
 
