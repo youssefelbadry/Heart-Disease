@@ -4,11 +4,7 @@ let pool: mysql.Pool;
 
 if (!(global as any)._mysqlPool) {
   (global as any)._mysqlPool = mysql.createPool({
-    host: process.env.DB_HOST!,
-    user: process.env.DB_USER!,
-    password: process.env.DB_PASS || process.env.DB_PASSWORD!,
-    database: process.env.DB_NAME!,
-    port: Number(process.env.DB_PORT),
+    uri: process.env.MYSQL_PUBLIC_URL || "",
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
