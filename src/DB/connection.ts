@@ -1,10 +1,20 @@
+import { config } from "dotenv";
+import path from "node:path";
 import mysql from "mysql2/promise";
+
+config({ path: path.resolve("./config/.env.dev") });
+
+const mysqlUrl = process.env.MYSQL_PUBLIC_URL;
+
+if (!mysqlUrl) {
+  throw new Error("MYSQL_PUBLIC_URL is missing in config/.env.dev");
+}
 
 let pool: mysql.Pool;
 
 if (!(global as any)._mysqlPool) {
   (global as any)._mysqlPool = mysql.createPool({
-    uri: process.env.MYSQL_PUBLIC_URL || "",
+    uri: mysqlUrl,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,

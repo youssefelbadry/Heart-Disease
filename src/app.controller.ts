@@ -5,6 +5,7 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import authRouter from "./Modules/Auth/auth.controller";
+import userRouter from "./Modules/Users/user.controller";
 import medicalRecordRouter from "./Modules/MedicalRecord/medicalRecord.controller";
 import echoVideoRouter from "./Modules/EchoVideos/echoVideos.controller";
 import { globalErrorHandling } from "./Utils/Responsive/error.res";
@@ -27,6 +28,7 @@ const bootstrab = () => {
   );
 
   app.use("/api/v1/auth", authRouter);
+  app.use("/api/v1/users", userRouter);
   app.use("/api/v1/medical", medicalRecordRouter);
   app.use("/api/v1/echo", echoVideoRouter);
   app.use("/api/v1/result", modelResultRouter);
