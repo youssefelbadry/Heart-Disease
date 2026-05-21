@@ -5,5 +5,6 @@ import { authenticate } from "../../Middlewares/authentication.middelware";
 const router: Router = Router();
 
 router.get("/profile", authenticate, userService.getUserData);
+router.get("/analysis", authenticate, userService.getMyAnalysis);
 
 export default router;

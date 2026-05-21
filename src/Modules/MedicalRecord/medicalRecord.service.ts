@@ -5,7 +5,9 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "../../Utils/Responsive/error.res";
-
+import { predictClinical } from "../../Services/ai/ai.service";
+import modelResultRepository from "../../DB/Repository/modelResult.repository";
+import { tryRunGlobalPrediction } from "../../Services/result/createGlobalPrediction";
 class MedicalRecordService {
   constructor() {}
 
@@ -28,12 +30,54 @@ class MedicalRecordService {
 
     const recordId = await MedicalRecordRepository.create(data);
 
+    // Call AI service to get prediction
+
+    const aiResult = await predictClinical({
+      male: data.male,
+      age: data.age,
+      currentSmoker: data.currentSmoker,
+      BPMeds: data.BPMeds,
+      prevalentHyp: data.prevalentHyp,
+      diabetes: data.diabetes,
+      sysBP: data.sysBP,
+      diaBP: data.diaBP,
+    });
+
+    const incompleteResult = await modelResultRepository.findIncompleteResult(
+      req.user.id,
+    );
+
+    if (incompleteResult) {
+      await modelResultRepository.update(
+        {
+          patient_id: req.user.id,
+        },
+
+        {
+          medical_record_id: recordId,
+
+          cvd_risk_score: aiResult.clinical_score,
+        },
+      );
+    } else {
+      await modelResultRepository.create({
+        patient_id: req.user.id,
+
+        medical_record_id: recordId,
+
+        cvd_risk_score: aiResult.clinical_score,
+      });
+    }
+    await tryRunGlobalPrediction(req.user.id);
     return res.status(201).json({
       message: "Medical record created",
-      data: {
+
+      medical_record: {
         id: recordId,
         ...data,
       },
+
+      cvd_risk_score: aiResult.clinical_score,
     });
   };
 

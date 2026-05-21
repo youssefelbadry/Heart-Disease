@@ -1,7 +1,4 @@
 import * as z from "zod";
-import {
-  createEchoVideoSchema,
-} from "./echoVideos.validation";
+import { getEchoVideoSchema } from "./echoVideos.validation";
 
-export type ICreateEchoVideoDTO = z.infer<typeof createEchoVideoSchema.body>;
-
+export type IGetEchoVideoDTO = z.infer<typeof getEchoVideoSchema.params>;

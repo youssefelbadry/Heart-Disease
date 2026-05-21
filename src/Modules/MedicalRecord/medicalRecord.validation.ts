@@ -7,43 +7,25 @@ export const createMedicalRecordSchema = {
       .int()
       .positive("Patient ID must be a positive integer")
       .optional(),
+
+    male: z.number().min(0).max(1, "male must be 0 or 1"),
+
     age: z
       .number()
       .int()
       .min(0, "Age must be positive")
       .max(120, "Invalid age"),
 
-    gender: z
-      .enum(["MALE", "FEMALE"], {
-        message: "Gender must be MALE or FEMALE",
-      })
-      .default("MALE"),
+    currentSmoker: z.number().min(0).max(1).optional(),
 
-    systolic_bp: z.number().optional(),
-    diastolic_bp: z.number().optional(),
+    BPMeds: z.number().min(0).max(1).optional(),
 
-    blood_pressure: z.string().optional(),
-    blood_pressure_category: z.string().optional(),
+    prevalentHyp: z.number().min(0).max(1).optional(),
 
-    estimated_ldl: z.number().optional(),
-    total_cholesterol: z.number().optional(),
-    hdl: z.number().optional(),
+    diabetes: z.number().min(0).max(1).optional(),
 
-    weight: z.number().optional(),
-    height: z.number().optional(),
-    bmi: z.number().optional(),
+    sysBP: z.number().optional(),
 
-    waist_to_height_ratio: z.number().optional(),
-    abdominal_circumference: z.number().optional(),
-
-    physical_activity_level: z.string().optional(),
-    family_history_of_cvd: z.boolean().optional(),
-    diabetes_status: z.string().optional(),
-    smoking_status: z.string().optional(),
-    fasting_blood_sugar: z.number().optional(),
+    diaBP: z.number().optional(),
   }),
-
-  // params: z.strictObject({
-  //   id: z.number().int().positive("Patient ID must be a positive integer"),
-  // }),
 };

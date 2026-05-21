@@ -4,13 +4,16 @@ import pool from "../connection";
 export interface CreateMedicalRecordDTO {
   patient_id: number;
 
+  male: number;
   age: number;
-  gender: string;
 
-  systolic_bp?: number;
-  diastolic_bp?: number;
-  blood_pressure?: string;
-  blood_pressure_category?: string;
+  currentSmoker?: number;
+  BPMeds?: number;
+  prevalentHyp?: number;
+  diabetes?: number;
+
+  sysBP?: number;
+  diaBP?: number;
 
   estimated_ldl?: number;
   total_cholesterol?: number;
@@ -25,8 +28,7 @@ export interface CreateMedicalRecordDTO {
 
   physical_activity_level?: string;
   family_history_of_cvd?: boolean;
-  diabetes_status?: string;
-  smoking_status?: string;
+
   fasting_blood_sugar?: number;
 }
 
@@ -34,51 +36,37 @@ class MedicalRecordRepository {
   async create(data: ICreateMedicalRecordDTO): Promise<number> {
     const [result]: any = await pool.query(
       `
-      INSERT INTO medical_records (
-        patient_id,
-        age,
-        gender,
-        systolic_bp,
-        diastolic_bp,
-        blood_pressure,
-        blood_pressure_category,
-        estimated_ldl,
-        total_cholesterol,
-        hdl,
-        weight,
-        height,
-        bmi,
-        waist_to_height_ratio,
-        abdominal_circumference,
-        physical_activity_level,
-        family_history_of_cvd,
-        diabetes_status,
-        smoking_status,
-        fasting_blood_sugar
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `,
+  INSERT INTO medical_records (
+    patient_id,
+    male,
+    age,
+    currentSmoker,
+    BPMeds,
+    prevalentHyp,
+    diabetes,
+    sysBP,
+    diaBP
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `,
       [
         data.patient_id,
+
+        data.male,
+
         data.age,
-        data.gender,
-        data.systolic_bp ?? null,
-        data.diastolic_bp ?? null,
-        data.blood_pressure ?? null,
-        data.blood_pressure_category ?? null,
-        data.estimated_ldl ?? null,
-        data.total_cholesterol ?? null,
-        data.hdl ?? null,
-        data.weight ?? null,
-        data.height ?? null,
-        data.bmi ?? null,
-        data.waist_to_height_ratio ?? null,
-        data.abdominal_circumference ?? null,
-        data.physical_activity_level ?? null,
-        data.family_history_of_cvd ?? null,
-        data.diabetes_status ?? null,
-        data.smoking_status ?? null,
-        data.fasting_blood_sugar ?? null,
-      ]
+
+        data.currentSmoker ?? 0,
+
+        data.BPMeds ?? 0,
+
+        data.prevalentHyp ?? 0,
+
+        data.diabetes ?? 0,
+
+        data.sysBP ?? null,
+
+        data.diaBP ?? null,
+      ],
     );
 
     return result.insertId;
@@ -92,7 +80,7 @@ class MedicalRecordRepository {
       WHERE patient_id = ?
       ORDER BY created_at DESC
       `,
-      [patientId]
+      [patientId],
     );
 
     return rows;
@@ -106,7 +94,22 @@ class MedicalRecordRepository {
       WHERE id = ? AND patient_id = ?
       LIMIT 1
       `,
-      [recordId, patientId]
+      [recordId, patientId],
+    );
+
+    return rows[0] || null;
+  }
+
+  async findLatestByPatientId(patientId: number) {
+    const [rows]: any = await pool.query(
+      `
+    SELECT *
+    FROM medical_records
+    WHERE patient_id = ?
+    ORDER BY created_at DESC
+    LIMIT 1
+    `,
+      [patientId],
     );
 
     return rows[0] || null;
