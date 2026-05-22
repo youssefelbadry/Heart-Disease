@@ -8,8 +8,8 @@ import {
 import { predictEF } from "../../Services/ai/ai.service";
 import modelResultRepository from "../../DB/Repository/modelResult.repository";
 import medicalRecordRepository from "../../DB/Repository/medicalRecord.repository";
-import path from "path";
 import { tryRunGlobalPrediction } from "../../Services/result/createGlobalPrediction";
+import { uploadBuffer } from "../../Utils/Multer/cloudinary.multer";
 class EchoVideoService {
   constructor() {}
 
@@ -26,16 +26,23 @@ class EchoVideoService {
       throw new BadRequestException("Uploaded file must be a video");
     }
 
-    if (!req.uploadedFilePath) {
-      throw new BadRequestException("File path not generated");
-    }
+    // upload to cloudinary
+    const uploadedVideo: any = await uploadBuffer(
+      req.file,
+
+      {
+        folder: "echoVideos",
+
+        resource_type: "video",
+      },
+    );
 
     const data = {
       patient_id: req.user.id,
 
       ...req.body,
 
-      file_url: req.uploadedFilePath,
+      file_url: uploadedVideo.secure_url,
 
       video_format: req.file.mimetype,
     };
@@ -44,11 +51,10 @@ class EchoVideoService {
     const videoId = await EchoVideoRepository.create(data);
 
     // send video to AI
-    const aiResult = await predictEF(
-      path.resolve(`src/${req.uploadedFilePath}`),
-    );
+    const aiResult = await predictEF(req.file);
 
     console.log(aiResult);
+
     const latestMedicalRecord =
       await medicalRecordRepository.findLatestByPatientId(req.user.id);
 
@@ -60,7 +66,7 @@ class EchoVideoService {
     if (incompleteResult) {
       await modelResultRepository.update(
         {
-          patient_id: req.user.id,
+          patient_id: incompleteResult.patient_id,
         },
 
         {
@@ -82,14 +88,16 @@ class EchoVideoService {
         ef_percentage: aiResult.ef_percentage,
       });
     }
+
     // run global prediction
-    await tryRunGlobalPrediction(req.user.id);
+    await tryRunGlobalPrediction(req.user.id, req.file);
 
     return res.status(201).json({
       message: "Echo video created",
 
       data: {
         id: videoId,
+
         ...data,
       },
 
@@ -98,7 +106,6 @@ class EchoVideoService {
       },
     });
   };
-
   getEchoVideo = async (req: Request, res: Response): Promise<Response> => {
     const video_id = Number(req.params.id);
     if (isNaN(video_id)) {

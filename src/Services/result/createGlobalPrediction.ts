@@ -1,14 +1,13 @@
-import path from "path";
-
 import modelResultRepository from "../../DB/Repository/modelResult.repository";
 
 import medicalRecordRepository from "../../DB/Repository/medicalRecord.repository";
 
-import echoVideoRepository from "../../DB/Repository/echoVideo.repository";
-
 import { predictGlobal } from "../ai/ai.service";
 
-export const tryRunGlobalPrediction = async (patientId: number) => {
+export const tryRunGlobalPrediction = async (
+  patientId: number,
+  file: Express.Multer.File,
+) => {
   // latest clinical result
   const clinicalResult =
     await modelResultRepository.findLatestClinicalResult(patientId);
@@ -29,19 +28,9 @@ export const tryRunGlobalPrediction = async (patientId: number) => {
     return;
   }
 
-  // get echo video
-  const echoVideo = await echoVideoRepository.findById(
-    efResult.echo_video_id,
-    patientId,
-  );
-
-  if (!echoVideo) {
-    return;
-  }
-
   // run AI global prediction
   const globalResult = await predictGlobal(
-    path.resolve(`src/${echoVideo.file_url}`),
+    file,
 
     {
       male: latestMedicalRecord.male,
