@@ -3,7 +3,7 @@ import FormData from "form-data";
 import fs from "fs";
 import path from "path";
 
-const AI_BASE_URL = "https://ahmedfergany-last-update.hf.space";
+const AI_BASE_URL = "https://ahmedfergany-finish.hf.space";
 
 // =========================
 // Clinical Prediction
@@ -18,34 +18,6 @@ export const predictClinical = async (data: any) => {
 // =========================
 // Echo Video Prediction
 // =========================
-
-// export const predictEF = async (videoPath: string) => {
-//   const resolvedPath = path.resolve(videoPath);
-
-//   console.log("VIDEO PATH:", resolvedPath);
-
-//   console.log("FILE EXISTS:", fs.existsSync(resolvedPath));
-
-//   const formData = new FormData();
-
-//   formData.append(
-//     "video",
-
-//     fs.createReadStream(resolvedPath),
-//   );
-
-//   const response = await axios.post(
-//     `${AI_BASE_URL}/predict_ef`,
-
-//     formData,
-
-//     {
-//       headers: formData.getHeaders(),
-//     },
-//   );
-
-//   return response.data;
-// };
 
 export const predictEF = async (file: Express.Multer.File) => {
   const formData = new FormData();
