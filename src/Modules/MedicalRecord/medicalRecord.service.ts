@@ -68,7 +68,7 @@ class MedicalRecordService {
         cvd_risk_score: aiResult.clinical_score,
       });
     }
-    await tryRunGlobalPrediction(req.user.id);
+    await tryRunGlobalPrediction(req.user.id, req.file!);
     return res.status(201).json({
       message: "Medical record created",
 
