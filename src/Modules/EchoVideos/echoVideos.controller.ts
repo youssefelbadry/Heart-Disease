@@ -4,7 +4,7 @@ import { validation } from "../../Middlewares/validation.middlware";
 
 import { authenticate } from "../../Middlewares/authentication.middelware";
 import { getEchoVideoSchema } from "./echoVideos.validation";
-import { localFileUpload } from "../../Utils/Multer/local.multer";
+import { localFileUpload } from "../../Utils/Multer/cloud";
 const router: Router = Router();
 
 router.post(
