@@ -27,5 +27,7 @@ export const createMedicalRecordSchema = {
     sysBP: z.number().optional(),
 
     diaBP: z.number().optional(),
+
+    pulse_pressure: z.number().optional(),
   }),
 };

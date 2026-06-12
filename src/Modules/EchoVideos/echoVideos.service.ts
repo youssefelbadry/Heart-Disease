@@ -90,7 +90,9 @@ class EchoVideoService {
     }
 
     // run global prediction
-    await tryRunGlobalPrediction(req.user.id, req.file);
+    await tryRunGlobalPrediction(req.user.id).catch((error) => {
+      console.error("Global prediction failed:", error);
+    });
 
     return res.status(201).json({
       message: "Echo video created",

@@ -73,38 +73,74 @@ const appendVideoSource = async (formData: FormData, videoSource: string) => {
   formData.append("video", fs.createReadStream(resolvedPath));
 };
 
-export const predictGlobal = async (
-  file: Express.Multer.File,
+export const calculateGlobalRisk = (
+  clinical_score: number,
 
-  features: any,
+  ef: number,
 ) => {
-  const formData = new FormData();
+  let ef_penalty = 0;
 
-  formData.append(
-    "video",
+  // EF penalty
+  if (ef >= 60) {
+    ef_penalty = 0.0;
+  } else if (ef >= 55) {
+    ef_penalty = 0.15;
+  } else if (ef >= 50) {
+    ef_penalty = 0.3;
+  } else if (ef >= 45) {
+    ef_penalty = 0.5;
+  } else if (ef >= 40) {
+    ef_penalty = 0.7;
+  } else if (ef >= 35) {
+    ef_penalty = 0.9;
+  } else {
+    ef_penalty = 1.0;
+  }
 
-    file.buffer,
+  // weights
+  let w1 = 0;
+  let w2 = 0;
 
-    {
-      filename: file.originalname,
+  if (ef >= 55) {
+    w1 = 0.75;
+    w2 = 0.25;
+  } else if (ef >= 45) {
+    w1 = 0.65;
+    w2 = 0.35;
+  } else if (ef >= 35) {
+    w1 = 0.55;
+    w2 = 0.45;
+  } else {
+    w1 = 0.45;
+    w2 = 0.55;
+  }
 
-      contentType: file.mimetype,
-    },
-  );
+  // calculate global risk
+  let global_risk = clinical_score * w1 + ef_penalty * w2;
 
-  const response = await axios.post(
-    `${AI_BASE_URL}/predict_global`,
+  // minimum risk for low EF
+  if (ef < 40) {
+    global_risk = Math.max(global_risk, 0.6);
+  }
 
-    formData,
+  // risk level
+  let risk_level = "LOW";
 
-    {
-      params: {
-        features: JSON.stringify(features),
-      },
+  if (global_risk < 0.3) {
+    risk_level = "LOW";
+  } else if (global_risk < 0.6) {
+    risk_level = "MODERATE";
+  } else {
+    risk_level = "HIGH";
+  }
 
-      headers: formData.getHeaders(),
-    },
-  );
+  return {
+    clinical_score,
 
-  return response.data;
+    ef_percentage: ef,
+
+    global_risk,
+
+    risk_level,
+  };
 };

@@ -14,22 +14,7 @@ export interface CreateMedicalRecordDTO {
 
   sysBP?: number;
   diaBP?: number;
-
-  estimated_ldl?: number;
-  total_cholesterol?: number;
-  hdl?: number;
-
-  weight?: number;
-  height?: number;
-  bmi?: number;
-
-  waist_to_height_ratio?: number;
-  abdominal_circumference?: number;
-
-  physical_activity_level?: string;
-  family_history_of_cvd?: boolean;
-
-  fasting_blood_sugar?: number;
+  pulse_pressure?: number;
 }
 
 class MedicalRecordRepository {
@@ -45,8 +30,9 @@ class MedicalRecordRepository {
     prevalentHyp,
     diabetes,
     sysBP,
-    diaBP
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    diaBP,
+    pulse_pressure 
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `,
       [
         data.patient_id,
@@ -66,6 +52,9 @@ class MedicalRecordRepository {
         data.sysBP ?? null,
 
         data.diaBP ?? null,
+
+        data.pulse_pressure ??
+          (data.sysBP && data.diaBP ? data.sysBP - data.diaBP : null),
       ],
     );
 

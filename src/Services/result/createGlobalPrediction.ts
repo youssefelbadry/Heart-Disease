@@ -1,13 +1,8 @@
 import modelResultRepository from "../../DB/Repository/modelResult.repository";
 
-import medicalRecordRepository from "../../DB/Repository/medicalRecord.repository";
+import { calculateGlobalRisk } from "../ai/ai.service";
 
-import { predictGlobal } from "../ai/ai.service";
-
-export const tryRunGlobalPrediction = async (
-  patientId: number,
-  file: Express.Multer.File,
-) => {
+export const tryRunGlobalPrediction = async (patientId: number) => {
   // latest clinical result
   const clinicalResult =
     await modelResultRepository.findLatestClinicalResult(patientId);
@@ -20,40 +15,15 @@ export const tryRunGlobalPrediction = async (
     return;
   }
 
-  // latest medical record
-  const latestMedicalRecord =
-    await medicalRecordRepository.findLatestByPatientId(patientId);
+  // calculate global locally
+  const globalResult = calculateGlobalRisk(
+    clinicalResult.cvd_risk_score,
 
-  if (!latestMedicalRecord) {
-    return;
-  }
-
-  // run AI global prediction
-  const globalResult = await predictGlobal(
-    file,
-
-    {
-      male: latestMedicalRecord.male,
-
-      age: latestMedicalRecord.age,
-
-      currentSmoker: latestMedicalRecord.currentSmoker,
-
-      BPMeds: latestMedicalRecord.BPMeds,
-
-      prevalentHyp: latestMedicalRecord.prevalentHyp,
-
-      diabetes: latestMedicalRecord.diabetes,
-
-      sysBP: latestMedicalRecord.sysBP,
-
-      diaBP: latestMedicalRecord.diaBP,
-    },
+    efResult.ef_percentage,
   );
-  console.log(clinicalResult);
 
-  console.log(efResult);
   console.log(globalResult);
+
   // save global result
   await modelResultRepository.updatePublic(
     {

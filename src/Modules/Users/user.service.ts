@@ -58,7 +58,6 @@ class UserService {
         ai_analysis: latestResult
           ? {
               clinical_score: latestResult.cvd_risk_score,
-
               ef_percentage: latestResult.ejection_fraction,
               global_prediction: latestResult.global_prediction,
               risk_level: latestResult.risk_level,

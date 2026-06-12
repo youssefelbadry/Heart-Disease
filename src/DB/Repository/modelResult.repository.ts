@@ -13,7 +13,7 @@ class ModelResultRepository {
       ef_percentage,
       global_prediction,
       risk_level,
-      model_metadata
+      pulse_pressure
     )
     VALUES (?, ?, ?, ?, ?, ?, ?,?)
     `,
@@ -32,7 +32,7 @@ class ModelResultRepository {
 
         data.risk_level,
 
-        data.model_metadata ? JSON.stringify(data.model_metadata) : null,
+        data.pulse_pressure,
       ],
     );
 

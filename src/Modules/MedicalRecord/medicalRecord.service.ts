@@ -68,13 +68,17 @@ class MedicalRecordService {
         cvd_risk_score: aiResult.clinical_score,
       });
     }
-    await tryRunGlobalPrediction(req.user.id, req.file!);
+    tryRunGlobalPrediction(req.user.id).catch((error) => {
+      console.error("Global prediction failed:", error);
+    });
     return res.status(201).json({
       message: "Medical record created",
 
       medical_record: {
         id: recordId,
         ...data,
+        pulse_pressure:
+          data.sysBP && data.diaBP ? data.sysBP - data.diaBP : null,
       },
 
       cvd_risk_score: aiResult.clinical_score,

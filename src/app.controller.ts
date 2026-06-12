@@ -16,7 +16,16 @@ config({ path: path.resolve("./config/.env.dev") });
 const bootstrab = () => {
   const app = express();
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin: [
+        "*",
+        process.env.AI_URL || "",
+        "http://localhost:3000",
+        "http://localhost:5173",
+      ],
+    }),
+  );
   app.use(helmet());
   app.use(express.json());
 
