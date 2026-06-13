@@ -29,6 +29,11 @@ class MedicalRecordService {
     };
 
     const recordId = await MedicalRecordRepository.create(data);
+    const pulsePressure =
+      data.pulse_pressure ??
+      (data.sysBP !== undefined && data.diaBP !== undefined
+        ? data.sysBP - data.diaBP
+        : null);
 
     // Call AI service to get prediction
 
@@ -57,6 +62,8 @@ class MedicalRecordService {
           medical_record_id: recordId,
 
           cvd_risk_score: aiResult.clinical_score,
+
+          pulse_pressure: pulsePressure,
         },
       );
     } else {
@@ -66,6 +73,8 @@ class MedicalRecordService {
         medical_record_id: recordId,
 
         cvd_risk_score: aiResult.clinical_score,
+
+        pulse_pressure: pulsePressure,
       });
     }
     tryRunGlobalPrediction(req.user.id).catch((error) => {
@@ -77,11 +86,11 @@ class MedicalRecordService {
       medical_record: {
         id: recordId,
         ...data,
-        pulse_pressure:
-          data.sysBP && data.diaBP ? data.sysBP - data.diaBP : null,
+        pulse_pressure: pulsePressure,
       },
 
       cvd_risk_score: aiResult.clinical_score,
+      pulse_pressure: pulsePressure,
     });
   };
 

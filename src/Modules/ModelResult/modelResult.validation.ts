@@ -19,6 +19,6 @@ export const createModelResultSchema = {
 
     risk_level: z.string().optional(),
 
-    pulse_pressure: z.number().optional(),
+    pulse_pressure: z.number().min(0).max(300).optional(),
   }),
 };

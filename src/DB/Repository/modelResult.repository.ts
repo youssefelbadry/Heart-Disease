@@ -15,7 +15,7 @@ class ModelResultRepository {
       risk_level,
       pulse_pressure
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?,?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `,
       [
         data.patient_id,
