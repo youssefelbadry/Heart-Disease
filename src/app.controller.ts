@@ -20,7 +20,7 @@ const bootstrab = () => {
     cors({
       origin: [
         "*",
-        process.env.AI_URL || "",
+        (process.env.AI_URL as string) || "",
         "http://localhost:3000",
         "http://localhost:5173",
       ],
